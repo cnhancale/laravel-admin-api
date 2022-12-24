@@ -27,13 +27,17 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $isAuth = Auth::attempt($request->only('email', 'password'));
+
         if (!$isAuth) {
             return response(['error' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);
         }
+
         /** @var User $user */
         $user = Auth::user();
+
         $token = $user->createToken('token')->plainTextToken;
         $cookie = cookie('jwt', $token, 60 * 24);
+
         return response(['token' => $token])->withCookie($cookie);
     }
 
