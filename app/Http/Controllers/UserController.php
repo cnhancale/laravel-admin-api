@@ -11,16 +11,16 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate();
         return response($users, Response::HTTP_OK);
     }
 
     public function store(Request $request)
     {
-        $user = User::created([
+        $user = User::create(
             $request->only('first_name', 'last_name', 'email') +
-            ['password' => Hash::make(1234)]
-        ]);
+                ['password' => Hash::make('1234')]
+        );
         return response($user, Response::HTTP_CREATED);
     }
 
