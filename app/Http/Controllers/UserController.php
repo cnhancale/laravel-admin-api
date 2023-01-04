@@ -26,7 +26,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::find($id);
+        $user = User::with('role')->find($id);
         return response($user, Response::HTTP_OK);
     }
 
