@@ -10,24 +10,31 @@ class RoleController extends Controller
 {
     public function index()
     {
-        return Role::cursor();
+        return Role::with('permissions')->get();
     }
 
     public function store(Request $request)
     {
         $role = Role::create($request->only('name'));
+
+        $role->permissions()->attach($request->input('permissions'));
+
         return response($role, Response::HTTP_CREATED);
     }
 
     public function show($id)
     {
-        return Role::find($id);
+        return Role::with('permissions')->find($id);
     }
 
     public function update(Request $request, $id)
     {
         $role = Role::find($id);
+
         $role->update($request->only('name'));
+
+        $role->permissions()->sync($request->input('permissions'));
+
         return response($role, Response::HTTP_ACCEPTED);
     }
 
